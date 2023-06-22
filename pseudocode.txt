@@ -1,0 +1,90 @@
+#include <SimpleFOC.h>
+
+// define the motor and encoder pins
+#define MOTOR_PIN 5
+#define ENCODER_PIN 6
+#define THROTTLE_PIN A0  // analog pin
+#define BRAKE_PIN 7 // digital pin
+
+// create a motor instance
+BLDCMotor motor = BLDCMotor(MOTOR_PIN);
+// create an encoder instance
+Encoder encoder = Encoder(ENCODER_PIN);
+
+// initialize the motor and the encoder
+void setup() {
+  motor.init();
+  encoder.init();
+  motor.linkEncoder(&encoder);
+  
+  // set throttle and brake pins as input
+  pinMode(THROTTLE_PIN, INPUT);
+  pinMode(BRAKE_PIN, INPUT);
+}
+
+// read the current speed of the electric skateboard
+float read_speed() {
+  return motor.getVelocity();
+}
+
+// read the amount of throttle currently being inputted by the user
+int read_throttle_input() {
+  return analogRead(THROTTLE_PIN);
+}
+
+// read if the brake flag has been triggered
+bool read_brake_input() {
+  return digitalRead(BRAKE_PIN);
+}
+
+// Function to increase motor speed
+function increase_speed():
+    read_speed()  // Measure the current speed of the motor
+    
+    while current_speed < desired_speed:
+        read_throttle_input()  // Read the throttle input from the rider
+        set_control_signals(ON)  // Set the control signals to increase motor speed
+        
+        // Gradually increase the motor speed
+        // You can adjust the speed increment based on the throttle input
+        motor_speed += throttle_input * speed_increment
+        
+        // Wait for a short duration before checking the current speed again
+        wait(time_interval)
+        read_speed()  // Measure the current speed of the motor
+
+    set_control_signals(OFF)  // Turn off the control signals
+
+// Function to decrease motor speed
+function decrease_speed():
+    read_speed()  // Measure the current speed of the motor
+    
+    while current_speed > desired_speed:
+        read_brake_input()  // Read the brake input from the rider
+        set_control_signals(ON)  // Set the control signals to decrease motor speed
+        
+        // Gradually decrease the motor speed
+        // You can adjust the speed decrement based on the brake input
+        motor_speed -= brake_input * speed_decrement
+        
+        // Wait for a short duration before checking the current speed again
+        wait(time_interval)
+        read_speed()  // Measure the current speed of the motor
+
+    set_control_signals(OFF)  // Turn off the control signals
+
+// Function to set control signals based on motor state
+function set_control_signals(state):
+    // Check the state, based on the state, alter the signals
+
+// Function to handle reverse mode of the skateboard
+function enable_reverse_mode():
+    // 1. Set is_reverse to true
+    // 2. Have some kind of delay
+    // 3. Multiply current_speed by -1 so that motor spins backwards
+
+// Function to disable reverse mode of the skateboard
+function disable_reverse_mode():
+    // 1. Set is_reverse to false
+    // 2. Have some kind of delay
+    // 3. Multiply current_speed by -1 so that motor spins forwards
